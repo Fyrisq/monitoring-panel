@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Système</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h1><i class="fa-solid fa-shield-halved"></i> Admin</h1>
+            </div>
+            <ul>
+                <li><a href="#" class="nav-link active" data-view="monitoring"><i class="fa-solid fa-chart-line"></i> Monitoring</a></li>
+                <li><a href="#" class="nav-link" data-view="settings"><i class="fa-solid fa-sliders"></i> Settings</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="/logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Déconnexion</a>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div id="monitoring-view" class="view active-view">
+                <div class="info-bar">
+                    <div class="info-item">Hôte: <strong id="static-hostname">--</strong></div>
+                    <div class="info-item">CPU: <strong id="static-cpu">--</strong></div>
+                </div>
+                <div class="dashboard-container">
+                     <section class="category"><h2 class="category-title">Usage Système</h2><div class="category-grid"><div class="card"><div class="card-header"><h2><i class="fa-solid fa-microchip"></i> CPU</h2><div class="card-metric"><span id="cpu-usage">--</span>%</div></div><div class="chart-container"><canvas id="cpuChart"></canvas></div></div><div class="card"><div class="card-header"><h2><i class="fa-solid fa-memory"></i> Mémoire RAM</h2><div class="card-metric"><span id="ram-usage">--</span>%</div></div><div class="card-metric-small"><div>Utilisé: <span id="ram-used">--</span> GB</div><div>Total: <span id="ram-total">--</span> GB</div></div><div class="chart-container"><canvas id="ramChart"></canvas></div></div></div></section><section class="category"><h2 class="category-title">Réseau (<span id="net-iface">--</span>)</h2><div class="category-grid"><div class="card"><div class="card-header"><h2><i class="fa-solid fa-arrow-down-up-across-line"></i> Débit</h2></div><div class="card-metric-small"><div><i class="fa-solid fa-arrow-down" style="color:var(--accent-green);"></i> In: <span id="net-in-mbps">--</span> Mbps</div><div><i class="fa-solid fa-arrow-up" style="color:var(--accent-blue);"></i> Out: <span id="net-out-mbps">--</span> Mbps</div></div><div class="chart-container"><canvas id="netRateChart"></canvas></div></div><div class="card"><div class="card-header"><h2><i class="fa-solid fa-envelope-open-text"></i> Paquets (Total)</h2><div class="card-metric"><span id="net-total-pps">--</span> pps</div></div><div class="chart-container"><canvas id="netPacketChart"></canvas></div></div></div></section><section class="category"><h2 class="category-title">Stockage</h2><div class="category-grid"><div class="card"><div class="card-header"><h2><i class="fa-solid fa-hard-drive"></i> Disque (/)</h2></div><div class="storage-info"><div class="storage-bar"><div class="storage-bar-used" id="disk-usage-bar" style="width: 0%;"></div></div><div class="sub-metric"><span id="disk-used-gb">--</span> GB / <span id="disk-total-gb">--</span> GB (<span id="disk-use-percent">--</span>%)</div></div><hr class="card-divider"><div class="card-metric-small"><div><i class="fa-solid fa-book-open" style="color:var(--accent-purple);"></i> Lectures/s: <span id="disk-read">--</span></div><div><i class="fa-solid fa-pen" style="color:var(--accent-orange);"></i> Écritures/s: <span id="disk-write">--</span></div></div><div class="chart-container"><canvas id="diskIoChart"></canvas></div></div></div></section>
+                </div>
+            </div>
+
+            <div id="settings-view" class="view">
+                <div class="settings-container">
+                    <h1>Paramètres des Alertes</h1>
+                    <p>Configurez les alertes pour être notifié via un webhook Discord. Laissez l'URL vide pour désactiver les notifications.</p>
+                    <form id="settings-form">
+                        <div class="form-group">
+                            <label for="webhookUrl">URL du Webhook Discord</label>
+                            <input type="url" id="webhookUrl" name="webhookUrl" placeholder="https://discord.com/api/webhooks/...">
+                        </div>
+                        <hr>
+                        <h2>Seuils d'Alerte</h2>
+                        <div class="form-group">
+                            <label for="cpuThreshold">CPU (%) - Alerte si dépasse :</label>
+                            <input type="number" id="cpuThreshold" name="cpuThreshold" min="1" max="100" value="90">
+                        </div>
+                        <div class="form-group">
+                            <label for="ramThreshold">RAM (%) - Alerte si dépasse :</label>
+                            <input type="number" id="ramThreshold" name="ramThreshold" min="1" max="100" value="90">
+                        </div>
+                        <div class="form-group-inline">
+                            <label>Débit Entrant - Alerte si dépasse :</label>
+                            <input type="number" id="netInThreshold" name="netInThreshold" value="1000">
+                            <select id="netInUnit" name="netInUnit">
+                                <option>Kbps</option>
+                                <option selected>Mbps</option>
+                                <option>Gbps</option>
+                            </select>
+                        </div>
+                        <div class="form-group-inline">
+                            <label>Débit Sortant - Alerte si dépasse :</label>
+                            <input type="number" id="netOutThreshold" name="netOutThreshold" value="1000">
+                            <select id="netOutUnit" name="netOutUnit">
+                                <option>Kbps</option>
+                                <option selected>Mbps</option>
+                                <option>Gbps</option>
+                            </select>
+                        </div>
+                        <button type="submit">Sauvegarder les Paramètres</button>
+                        <span id="save-feedback" class="feedback-message"></span>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const MAX_DATA_POINTS = 30;
+
+        const navLinks = document.querySelectorAll('.nav-link');
+        const views = document.querySelectorAll('.view');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                const targetView = link.getAttribute('data-view');
+                views.forEach(view => {
+                    view.id === `${targetView}-view` ? view.classList.add('active-view') : view.classList.remove('active-view');
+                });
+            });
+        });
+
+        const createSingleLineChart = (ctx, max = 100, color = '#58a6ff') => new Chart(ctx, { type: 'line', data: { labels: [], datasets: [{ data: [], borderColor: color, backgroundColor: `${color}1A`, borderWidth: 2, fill: true, tension: 0.4, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, suggestedMax: max, grid: { color: '#30363d' } }, x: { display: false } }, plugins: { legend: { display: false } } } });
+        const createDualLineChart = (ctx, labels, colors) => new Chart(ctx, { type: 'line', data: { labels: [], datasets: [ { label: labels[0], data: [], borderColor: colors[0], backgroundColor: `${colors[0]}1A`, borderWidth: 2, fill: true, tension: 0.4, pointRadius: 0 }, { label: labels[1], data: [], borderColor: colors[1], backgroundColor: `${colors[1]}1A`, borderWidth: 2, fill: true, tension: 0.4, pointRadius: 0 } ] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: '#30363d' } }, x: { display: false } }, plugins: { legend: { display: true, labels: { color: '#c9d1d9' } } } } });
+        
+        const cpuChart = createSingleLineChart(document.getElementById('cpuChart').getContext('2d'));
+        const ramChart = createSingleLineChart(document.getElementById('ramChart').getContext('2d'));
+        const netRateChart = createDualLineChart(document.getElementById('netRateChart').getContext('2d'), ['In (Mbps)', 'Out (Mbps)'], ['#3fb950', '#58a6ff']);
+        const netPacketChart = createSingleLineChart(document.getElementById('netPacketChart').getContext('2d'), 1000, '#3fb950');
+        const diskIoChart = createDualLineChart(document.getElementById('diskIoChart').getContext('2d'), ['Lectures/s', 'Écritures/s'], ['#bc8cff', '#ffa657']);
+        
+        function updateChart(chart, newData) {
+            chart.data.labels.push('');
+            if (Array.isArray(newData)) { chart.data.datasets.forEach((dataset, i) => dataset.data.push(newData[i])); } else { chart.data.datasets[0].data.push(newData); }
+            if (chart.data.labels.length > MAX_DATA_POINTS) { chart.data.labels.shift(); chart.data.datasets.forEach(dataset => dataset.data.shift()); }
+            chart.update('none');
+        }
+        
+        socket.on('static-data', (data) => {
+            document.getElementById('static-hostname').textContent = data.hostname;
+            document.getElementById('static-cpu').textContent = data.cpu;
+        });
+        socket.on('dynamic-data', (data) => {
+            document.getElementById('cpu-usage').textContent = data.cpu;
+            updateChart(cpuChart, data.cpu);
+            document.getElementById('ram-usage').textContent = data.mem.percent;
+            document.getElementById('ram-used').textContent = data.mem.used;
+            document.getElementById('ram-total').textContent = data.mem.total;
+            updateChart(ramChart, data.mem.percent);
+            document.getElementById('net-iface').textContent = data.network.iface;
+            document.getElementById('net-in-mbps').textContent = data.network.mbps_in;
+            document.getElementById('net-out-mbps').textContent = data.network.mbps_out;
+            updateChart(netRateChart, [data.network.mbps_in, data.network.mbps_out]);
+            document.getElementById('net-total-pps').textContent = data.network.pps_total;
+            updateChart(netPacketChart, data.network.pps_total);
+            document.getElementById('disk-read').textContent = data.disk.rps;
+            document.getElementById('disk-write').textContent = data.disk.wps;
+            updateChart(diskIoChart, [data.disk.rps, data.disk.wps]);
+            document.getElementById('disk-used-gb').textContent = data.disk.used_gb;
+            document.getElementById('disk-total-gb').textContent = data.disk.size_gb;
+            document.getElementById('disk-use-percent').textContent = data.disk.use_percent;
+            document.getElementById('disk-usage-bar').style.width = data.disk.use_percent + '%';
+        });
+        socket.on('disconnect', (reason) => {
+            if (reason === 'io server disconnect') {
+                window.location.href = '/login.html';
+            }
+        });
+
+        const settingsForm = document.getElementById('settings-form');
+        const feedbackMsg = document.getElementById('save-feedback');
+        socket.emit('get-settings');
+        socket.on('settings-data', (settings) => {
+            document.getElementById('webhookUrl').value = settings.webhookUrl || '';
+            document.getElementById('cpuThreshold').value = settings.cpuThreshold || '90';
+            document.getElementById('ramThreshold').value = settings.ramThreshold || '90';
+            document.getElementById('netInThreshold').value = settings.netInThreshold || '1000';
+            document.getElementById('netInUnit').value = settings.netInUnit || 'Mbps';
+            document.getElementById('netOutThreshold').value = settings.netOutThreshold || '1000';
+            document.getElementById('netOutUnit').value = settings.netOutUnit || 'Mbps';
+        });
+        settingsForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const settings = {
+                webhookUrl: document.getElementById('webhookUrl').value,
+                cpuThreshold: document.getElementById('cpuThreshold').value,
+                ramThreshold: document.getElementById('ramThreshold').value,
+                netInThreshold: document.getElementById('netInThreshold').value,
+                netInUnit: document.getElementById('netInUnit').value,
+                netOutThreshold: document.getElementById('netOutThreshold').value,
+                netOutUnit: document.getElementById('netOutUnit').value,
+            };
+            socket.emit('save-settings', settings);
+        });
+        socket.on('settings-saved', () => {
+            feedbackMsg.textContent = 'Paramètres sauvegardés !';
+            setTimeout(() => {
+                feedbackMsg.textContent = '';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

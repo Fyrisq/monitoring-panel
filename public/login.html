@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accès Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page-body">
+    <div class="login-container">
+        <div class="login-box">
+            <i class="fa-solid fa-shield-halved logo-icon"></i>
+            <h2>Accès Sécurisé</h2>
+            <p class="login-subtitle">Veuillez vous authentifier pour accéder au dashboard.</p>
+            
+            <form action="/login" method="post">
+                <div class="input-group">
+                    <i class="fa-solid fa-key input-icon"></i>
+                    <input type="password" name="password" placeholder="Mot de passe" required autofocus>
+                </div>
+                <button type="submit">Se Connecter</button>
+            </form>
+            
+            <p id="error-message" class="error-text">Mot de passe incorrect.</p>
+        </div>
+    </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('error')) {
+            document.getElementById('error-message').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
