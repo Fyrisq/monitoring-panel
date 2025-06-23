@@ -52,7 +52,7 @@ node -v && npm -v && tcpdump --version
 
 
 # Clone the repo
-git clone https://github.com/your-username/your-repository-name.git
+git clone https://github.com/Fyrisq/monitoring-panel.git
 
 # Enter directory
 cd your-repository-name
