@@ -1,4 +1,4 @@
-````markdown
+
 # 📊 Real-time System & Network Dashboard
 
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
@@ -33,7 +33,7 @@
 
 Run these commands **on a Linux server**:
 
-```bash
+
 # 1. Install NVM & Node.js
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 source ~/.bashrc
@@ -44,13 +44,13 @@ sudo apt update && sudo apt install -y tcpdump
 
 # 3. Check installations
 node -v && npm -v && tcpdump --version
-````
+
 
 ---
 
 ## 📦 Install & Run
 
-```bash
+
 # Clone the repo
 git clone https://github.com/your-username/your-repository-name.git
 
@@ -62,7 +62,7 @@ npm install
 
 # Start server (requires root for tcpdump)
 sudo node server.js
-```
+
 
 🖥️ Open `http://<your_server_ip>:3000` in your browser.
 
