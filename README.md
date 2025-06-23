@@ -55,7 +55,7 @@ node -v && npm -v && tcpdump --version
 git clone https://github.com/Fyrisq/monitoring-panel.git
 
 # Enter directory
-cd your-repository-name
+cd monitoring-panel
 
 # Install dependencies
 npm install
