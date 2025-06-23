@@ -92,8 +92,7 @@ Configure from the dashboard:
 
 ## 🧪 Example Screenshot
 
-*(Add your screenshot here)*
-`![Dashboard Screenshot](screenshot.png)`
+![Dashboard Screenshot](screenshot.png)
 
 ---
 
