@@ -1,5 +1,3 @@
----
-
 ````markdown
 # 📊 Real-time System & Network Dashboard
 
