@@ -35,16 +35,21 @@ Run these commands **on a Linux server**:
 
 
 # 1. Install NVM & Node.js
+```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 source ~/.bashrc
 nvm install --lts
+```
 
 # 2. Install tcpdump
+```bash
 sudo apt update && sudo apt install -y tcpdump
+```
 
 # 3. Check installations
+```bash
 node -v && npm -v && tcpdump --version
-
+```
 
 ---
 
@@ -52,17 +57,24 @@ node -v && npm -v && tcpdump --version
 
 
 # Clone the repo
+```bash
 git clone https://github.com/Fyrisq/monitoring-panel.git
+```
 
 # Enter directory
+```bash
 cd monitoring-panel
+```
 
 # Install dependencies
+```bash
 npm install
+```
 
 # Start server (requires root for tcpdump)
+```bash
 sudo node server.js
-
+```
 
 🖥️ Open `http://<your_server_ip>:3000` in your browser.
 
